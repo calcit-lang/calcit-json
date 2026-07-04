@@ -9,6 +9,11 @@ pub fn abi_version() -> String {
 }
 
 #[no_mangle]
+pub fn edn_version() -> String {
+  cirru_edn::version().to_string()
+}
+
+#[no_mangle]
 pub fn json_stringify(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 || args.len() == 2 {
     let pretty = if args.len() == 2 {
@@ -107,7 +112,7 @@ fn edn_to_json(edn: &Edn) -> Result<JsonValue, String> {
       }
       Ok(JsonValue::Array(arr))
     }
-    Edn::Tuple(EdnTupleView { tag, extra }) => {
+    Edn::Tuple(EdnTupleView { tag, extra, .. }) => {
       let mut arr = vec![edn_to_json(&tag.to_owned())?];
       for item in extra {
         arr.push(edn_to_json(&item.to_owned())?);
@@ -124,6 +129,7 @@ fn edn_to_json(edn: &Edn) -> Result<JsonValue, String> {
       Ok(JsonValue::Object(obj))
     }
     Edn::AnyRef(_r) => Err("any-ref is a reference of unknown".to_owned()),
+    Edn::Atom(v) => edn_to_json(v),
   }
 }
 
