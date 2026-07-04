@@ -11,11 +11,9 @@ jobs:
     name: Test
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: calcit-lang/setup-cr@0.0.3
-        with:
-          version: "0.8.52"
+      - uses: calcit-lang/setup-cr@0.0.9
 
       - uses: dtolnay/rust-toolchain@stable
         with:
