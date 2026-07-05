@@ -67,6 +67,7 @@ fn json_to_edn(json: JsonValue) -> Edn {
       Edn::List(EdnListView(vec))
     }
     JsonValue::Object(obj) => {
+      #[allow(clippy::mutable_key_type)]
       let mut map = HashMap::new();
       for (k, v) in obj.iter() {
         map.insert(k.into(), json_to_edn(v.clone()));
