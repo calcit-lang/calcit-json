@@ -9,13 +9,11 @@ name: Test
 jobs:
   build_and_test:
     name: Test
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: calcit-lang/setup-cr@0.0.3
-        with:
-          version: "0.8.52"
+      - uses: calcit-lang/setup-cr@0.0.9
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -27,4 +25,4 @@ jobs:
 
       - run: rm -rfv dylibs/* && mkdir dylibs/ && ls target/release/ && cp -v target/release/*.* dylibs/
 
-      - run: cr -1
+      - run: cr
