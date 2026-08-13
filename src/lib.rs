@@ -116,7 +116,7 @@ fn edn_to_json(edn: &Edn) -> Result<JsonValue, String> {
     Edn::Enum(EdnEnumView { variant, extra, .. }) => {
       let mut arr = vec![JsonValue::String(variant.to_string())];
       for item in extra {
-        arr.push(edn_to_json(&item.to_owned())?);
+        arr.push(edn_to_json(item)?);
       }
       Ok(JsonValue::Array(arr))
     }
