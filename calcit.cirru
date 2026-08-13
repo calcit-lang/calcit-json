@@ -12,13 +12,19 @@
             defn parse (content)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_json) |json_parse content
           :examples $ []
-          :schema $ :: 'Dynamic
+          :ffi $ {} (:backend :native) (:symbol |json_parse)
+          :schema $ :: 'Fn
+            {} (:return 'Dynamic)
+              :args $ [] 'String
         |stringify $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn stringify (data ? pretty?)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_json) |json_stringify data pretty?
           :examples $ []
-          :schema $ :: 'Dynamic
+          :ffi $ {} (:backend :native) (:symbol |json_stringify)
+          :schema $ :: 'Fn
+            {} (:return 'String)
+              :args $ [] 'Dynamic 'Bool
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns json.core $ :require
@@ -30,12 +36,16 @@
           :code $ quote
             defn main! () $ run-tests
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ []
         |reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn reload! $
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ []
         |run-tests $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn run-tests () (println "|%%%% test for json") (println calcit-filename calcit-dirname)
@@ -43,7 +53,9 @@
               println |Stringify: $ stringify
                 {} $ :a 1
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'Unit)
+              :args $ []
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns json.test $ :require
@@ -55,19 +67,26 @@
           :code $ quote
             defmacro get-dylib-ext () $ case-default (&get-os) |.so (:macos |.dylib) (:windows |.dll)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :ffi $ {} (:backend :native)
+          :schema $ :: 'Macro
+            {} (:return 'String)
+              :args $ []
         |get-dylib-path $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn get-dylib-path (p)
               str (or-current-path calcit-dirname) p $ get-dylib-ext
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'String)
+              :args $ [] 'String
         |or-current-path $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn or-current-path (p)
               if (blank? p) |. p
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'String)
+              :args $ [] 'String
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns json.util $ :require
