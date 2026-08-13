@@ -25,4 +25,8 @@ jobs:
 
       - run: rm -rfv dylibs/* && mkdir dylibs/ && ls target/release/ && cp -v target/release/*.* dylibs/
 
-      - run: cr
+      - name: Validate Calcit snapshot
+        run: |
+          caps --ci
+          cr calcit.cirru --check-only
+          cr calcit.cirru

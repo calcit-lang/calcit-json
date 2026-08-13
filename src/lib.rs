@@ -1,4 +1,4 @@
-use cirru_edn::{Edn, EdnListView, EdnMapView, EdnRecordView, EdnTupleView};
+use cirru_edn::{Edn, EdnEnumView, EdnListView, EdnMapView, EdnStructView};
 use cirru_parser::Cirru;
 use json::JsonValue;
 use std::{collections::HashMap, sync::Arc};
@@ -113,16 +113,16 @@ fn edn_to_json(edn: &Edn) -> Result<JsonValue, String> {
       }
       Ok(JsonValue::Array(arr))
     }
-    Edn::Tuple(EdnTupleView { tag, extra, .. }) => {
-      let mut arr = vec![edn_to_json(&tag.to_owned())?];
+    Edn::Enum(EdnEnumView { variant, extra, .. }) => {
+      let mut arr = vec![JsonValue::String(variant.to_string())];
       for item in extra {
-        arr.push(edn_to_json(&item.to_owned())?);
+        arr.push(edn_to_json(item)?);
       }
       Ok(JsonValue::Array(arr))
     }
     Edn::Quote(x) => cirru_to_json(x),
     Edn::Buffer(buf) => Ok(JsonValue::String(format!("0x{}", hex::encode(buf)))),
-    Edn::Record(EdnRecordView { tag: _r, pairs: entries }) => {
+    Edn::Struct(EdnStructView { name: _r, pairs: entries }) => {
       let mut obj = json::object::Object::new();
       for (k, v) in entries {
         obj.insert(&k.arc_str(), edn_to_json(v)?);
