@@ -24,7 +24,7 @@
           :ffi $ {} (:backend :native) (:symbol |json_stringify)
           :schema $ :: 'Fn
             {} (:return 'String)
-              :args $ [] 'Dynamic 'Bool
+              :args $ [] 'Dynamic 'Option
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns json.core $ :require

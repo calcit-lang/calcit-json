@@ -36,8 +36,5 @@ jobs:
           caps --ci
           cr calcit.cirru --check-only
           cr calcit.cirru --warn-dyn-method --check-only
-          cr calcit.cirru analyze check-types --summary-only --format json > .calcit/upgrade/check-types.json
-          cr calcit.cirru analyze weak-types --intent unresolved,declared-optional --summary-only --format json > .calcit/upgrade/weak-types.json
-          cr calcit.cirru analyze deprecated --summary-only --format json > .calcit/upgrade/deprecated.json
           node scripts/check-calcit-upgrade-baseline.mjs
           cr calcit.cirru

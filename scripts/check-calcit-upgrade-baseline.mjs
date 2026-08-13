@@ -34,7 +34,9 @@ const failures = [];
 for (const key of Object.keys(current)) {
   if (!(key in expected)) failures.push(`${key}: missing baseline`);
   else if (!Number.isFinite(current[key]) || !Number.isFinite(expected[key])) failures.push(`${key}: non-finite metric`);
-  else if (current[key] > expected[key]) failures.push(`${key}: ${current[key]} > ${expected[key]}`);
+  else if (key === "check_types_full") {
+    if (current[key] < expected[key]) failures.push(`${key}: ${current[key]} < ${expected[key]}`);
+  } else if (current[key] > expected[key]) failures.push(`${key}: ${current[key]} > ${expected[key]}`);
 }
 for (const key of Object.keys(expected)) if (!(key in current)) failures.push(`${key}: unknown baseline metric`);
 for (const key of Object.keys(current)) console.log(`${key}: ${current[key]} (baseline ${expected[key] ?? "missing"})`);
