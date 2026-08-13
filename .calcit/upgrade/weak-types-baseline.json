@@ -1,0 +1,7 @@
+{
+  "calcit_version": "0.13.15",
+  "check_types": {"full": 6, "partial": 2, "none": 0},
+  "weak_types": {"schema_dynamic": 2, "code_dynamic": 0, "code_nil": 0, "unresolved": 2},
+  "deprecated_calls": 0,
+  "note": "The two unresolved Dynamic slots are deliberate native JSON FFI boundaries: parse returns decoded JSON and stringify accepts arbitrary JSON values. All local utility and test definitions have concrete schemas."
+}

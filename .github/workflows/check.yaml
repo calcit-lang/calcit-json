@@ -21,6 +21,12 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
 
+      - run: cargo fmt -- --check
+
+      - run: cargo clippy --all-targets -- -D warnings
+
+      - run: cargo test
+
       - run: cargo build --release
 
       - run: rm -rfv dylibs/* && mkdir dylibs/ && ls target/release/ && cp -v target/release/*.* dylibs/
@@ -29,4 +35,6 @@ jobs:
         run: |
           caps --ci
           cr calcit.cirru --check-only
+          cr calcit.cirru --warn-dyn-method --check-only
+          node scripts/check-calcit-upgrade-baseline.mjs
           cr calcit.cirru
