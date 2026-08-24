@@ -12,5 +12,6 @@
 .compact-inc.cirru
 
 /dylibs/
+.calcit/
 
 .DS_Store
