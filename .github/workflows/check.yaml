@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: calcit-lang/setup-calcit@v1
+      - uses: calcit-lang/setup-calcit@v1.3.0
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -29,11 +29,15 @@ jobs:
 
       - run: cargo build --release
 
-      - run: rm -rfv dylibs/* && mkdir dylibs/ && ls target/release/ && cp -v target/release/*.* dylibs/
+      - run: mkdir -p dylibs/ && cp -v target/release/libcalcit_json.* dylibs/
+
+      - run: bash scripts/check-c-safe-ffi.sh
 
       - name: Validate Calcit snapshot
         run: |
           caps --ci
+          calcit calcit.cirru edit format
+          git diff --exit-code -- calcit.cirru
           calcit calcit.cirru --check-only
           calcit calcit.cirru --warn-dyn-method --check-only
           calcit calcit.cirru analyze quality --baseline config/calcit-quality.json

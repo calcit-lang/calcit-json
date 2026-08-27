@@ -19,6 +19,9 @@ json.core/stringify-result $ {} (:a 1)
 
 Install to `~/.config/calcit/modules/`, compile and provide `*.{dylib,so}` file with `./build.sh`.
 
+The native library exports C-safe buffer FFI v1 and requires Calcit 0.13.52 or
+newer. Legacy Rust ABI symbols are intentionally no longer exported.
+
 ### Workflow
 
 https://github.com/calcit-lang/dylib-workflow

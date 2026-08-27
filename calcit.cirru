@@ -122,8 +122,10 @@
           :examples $ []
           :ffi $ {} (:backend :native)
           :schema $ :: 'Macro
-            {} (:return 'String)
-              :args $ []
+            {}
+              :capabilities $ #{} :platform-read
+              :expansion $ :: 'Expr 'String
+              :required $ []
         |get-dylib-path $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn get-dylib-path (p)

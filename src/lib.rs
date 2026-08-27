@@ -3,17 +3,8 @@ use cirru_parser::Cirru;
 use json::JsonValue;
 use std::{collections::HashMap, sync::Arc};
 
-#[no_mangle]
-pub fn abi_version() -> String {
-  String::from("0.0.9")
-}
+mod ffi;
 
-#[no_mangle]
-pub fn edn_version() -> String {
-  cirru_edn::version().to_string()
-}
-
-#[no_mangle]
 pub fn json_stringify(args: Vec<Edn>) -> Result<Edn, String> {
   json_stringify_impl(args)
 }
@@ -41,7 +32,6 @@ fn json_stringify_impl(args: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
-#[no_mangle]
 pub fn json_parse(args: Vec<Edn>) -> Result<Edn, String> {
   json_parse_impl(args)
 }
@@ -59,12 +49,10 @@ fn json_parse_impl(args: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
-#[no_mangle]
 pub fn json_stringify_result(args: Vec<Edn>) -> Result<Edn, String> {
   Ok(edn_result(json_stringify_impl(args)))
 }
 
-#[no_mangle]
 pub fn json_parse_result(args: Vec<Edn>) -> Result<Edn, String> {
   Ok(edn_result(json_parse_impl(args)))
 }
@@ -173,6 +161,26 @@ fn cirru_to_json(code: &Cirru) -> Result<JsonValue, String> {
     }
   }
 }
+
+macro_rules! export_buffer_method {
+  ($export:ident, $method:ident) => {
+    /// Invoke this JSON method through C-safe buffer protocol v1.
+    ///
+    /// # Safety
+    ///
+    /// Request bytes must remain readable and `output` writable for this call.
+    #[unsafe(no_mangle)]
+    pub unsafe extern "C" fn $export(request_ptr: *const u8, request_len: usize, output: *mut ffi::CalcitFfiBuffer) -> i32 {
+      // SAFETY: the shared adapter validates and copies every foreign input.
+      unsafe { ffi::run_buffer_adapter(request_ptr, request_len, output, $method) }
+    }
+  };
+}
+
+export_buffer_method!(json_stringify_calcit_ffi_v1, json_stringify);
+export_buffer_method!(json_parse_calcit_ffi_v1, json_parse);
+export_buffer_method!(json_stringify_result_calcit_ffi_v1, json_stringify_result);
+export_buffer_method!(json_parse_result_calcit_ffi_v1, json_parse_result);
 
 #[cfg(test)]
 mod tests {
