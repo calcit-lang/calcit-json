@@ -3,8 +3,6 @@ use cirru_parser::Cirru;
 use json::JsonValue;
 use std::{collections::HashMap, sync::Arc};
 
-mod ffi;
-
 calcit_native_ffi::export_buffer_abi_v1!();
 
 pub fn json_stringify(args: Vec<Edn>) -> Result<Edn, String> {
@@ -164,25 +162,10 @@ fn cirru_to_json(code: &Cirru) -> Result<JsonValue, String> {
   }
 }
 
-macro_rules! export_buffer_method {
-  ($export:ident, $method:ident) => {
-    /// Invoke this JSON method through C-safe buffer protocol v1.
-    ///
-    /// # Safety
-    ///
-    /// Request bytes must remain readable and `output` writable for this call.
-    #[unsafe(no_mangle)]
-    pub unsafe extern "C" fn $export(request_ptr: *const u8, request_len: usize, output: *mut ffi::CalcitFfiBuffer) -> i32 {
-      // SAFETY: the shared adapter validates and copies every foreign input.
-      unsafe { ffi::run_buffer_adapter(request_ptr, request_len, output, $method) }
-    }
-  };
-}
-
-export_buffer_method!(json_stringify_calcit_ffi_v1, json_stringify);
-export_buffer_method!(json_parse_calcit_ffi_v1, json_parse);
-export_buffer_method!(json_stringify_result_calcit_ffi_v1, json_stringify_result);
-export_buffer_method!(json_parse_result_calcit_ffi_v1, json_parse_result);
+calcit_native_ffi::export_edn_buffer_method_v1!(json_stringify_calcit_ffi_v1, json_stringify);
+calcit_native_ffi::export_edn_buffer_method_v1!(json_parse_calcit_ffi_v1, json_parse);
+calcit_native_ffi::export_edn_buffer_method_v1!(json_stringify_result_calcit_ffi_v1, json_stringify_result);
+calcit_native_ffi::export_edn_buffer_method_v1!(json_parse_result_calcit_ffi_v1, json_parse_result);
 
 #[cfg(test)]
 mod tests {
