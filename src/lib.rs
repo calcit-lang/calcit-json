@@ -5,6 +5,8 @@ use std::{collections::HashMap, sync::Arc};
 
 mod ffi;
 
+calcit_native_ffi::export_buffer_abi_v1!();
+
 pub fn json_stringify(args: Vec<Edn>) -> Result<Edn, String> {
   json_stringify_impl(args)
 }
