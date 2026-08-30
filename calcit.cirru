@@ -6,12 +6,12 @@
       :modules $ []
       :type-slots $ {}
   :files $ {}
-    |json.core $ %{} 'FileEntry
+    'json.core $ %{} 'FileEntry
       :defs $ {}
-        |parse $ %{} 'CodeEntry (:doc |)
+        'parse $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn parse (content)
-              tag-match
+              match
                 &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_json) |json_parse_result content
                 (:ok value) value
                 (:err message) (raise message)
@@ -20,10 +20,10 @@
           :schema $ :: 'Fn
             {} (:return 'Dynamic)
               :args $ [] 'String
-        |parse-result $ %{} 'CodeEntry (:doc "|Parse JSON into a typed Result. Invalid input returns Result.err instead of raising across the native boundary.")
+        'parse-result $ %{} 'CodeEntry (:doc "|Parse JSON into a typed Result. Invalid input returns Result.err instead of raising across the native boundary.")
           :code $ quote
             defn parse-result (content)
-              tag-match
+              match
                 &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_json) |json_parse_result content
                 (:ok value) (%ok value)
                 (:err message) (%err message)
@@ -40,10 +40,10 @@
               :code $ quote
                 assert |invalid-JSON-should-return-err $ result:err? (parse-result |{)
               :tags $ #{} :unit
-        |stringify $ %{} 'CodeEntry (:doc |)
+        'stringify $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn stringify (data ? pretty?)
-              tag-match
+              match
                 &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_json) |json_stringify_result data pretty?
                 (:ok value) value
                 (:err message) (raise message)
@@ -52,10 +52,10 @@
           :schema $ :: 'Fn
             {} (:return 'String)
               :args $ [] 'Dynamic 'Bool
-        |stringify-result $ %{} 'CodeEntry (:doc "|Serialize a value into a typed Result. Unsupported EDN values and invalid map keys return Result.err.")
+        'stringify-result $ %{} 'CodeEntry (:doc "|Serialize a value into a typed Result. Unsupported EDN values and invalid map keys return Result.err.")
           :code $ quote
             defn stringify-result (data pretty?)
-              tag-match
+              match
                 &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_json) |json_stringify_result data $ pretty? .unwrap-or false
                 (:ok value) (%ok value)
                 (:err message) (%err message)
@@ -77,23 +77,23 @@
           ns json.core $ :require
             json.$meta :refer $ calcit-dirname
             json.util :refer $ get-dylib-path
-    |json.test $ %{} 'FileEntry
+    'json.test $ %{} 'FileEntry
       :defs $ {}
-        |main! $ %{} 'CodeEntry (:doc |)
+        'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn main! () $ run-tests
           :examples $ []
           :schema $ :: 'Fn
             {} (:return 'Unit)
               :args $ []
-        |reload! $ %{} 'CodeEntry (:doc |)
+        'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn reload! $
           :examples $ []
           :schema $ :: 'Fn
             {} (:return 'Unit)
               :args $ []
-        |run-tests $ %{} 'CodeEntry (:doc |)
+        'run-tests $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn run-tests () (println "|%%%% test for json") (println calcit-filename calcit-dirname)
               println |Parsing: $ parse "|{\"a\":[\"b\",1]}"
@@ -114,9 +114,9 @@
           ns json.test $ :require
             json.core :refer $ parse stringify parse-result stringify-result
             json.$meta :refer $ calcit-dirname calcit-filename
-    |json.util $ %{} 'FileEntry
+    'json.util $ %{} 'FileEntry
       :defs $ {}
-        |get-dylib-ext $ %{} 'CodeEntry (:doc |)
+        'get-dylib-ext $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defmacro get-dylib-ext () $ case-default (&get-os) |.so (:macos |.dylib) (:windows |.dll)
           :examples $ []
@@ -126,7 +126,7 @@
               :capabilities $ #{} :platform-read
               :expansion $ :: 'Expr 'String
               :required $ []
-        |get-dylib-path $ %{} 'CodeEntry (:doc |)
+        'get-dylib-path $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn get-dylib-path (p)
               str (or-current-path calcit-dirname) p $ get-dylib-ext
@@ -134,7 +134,7 @@
           :schema $ :: 'Fn
             {} (:return 'String)
               :args $ [] 'String
-        |or-current-path $ %{} 'CodeEntry (:doc |)
+        'or-current-path $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn or-current-path (p)
               if (blank? p) |. p
