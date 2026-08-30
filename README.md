@@ -17,6 +17,10 @@ json.core/parse-result "|{\"a\": 1}"
 json.core/stringify-result $ {} (:a 1)
 ```
 
+See [Typed JSON boundary](docs/typed-json-boundary.md) for choosing the raising
+or `Result` APIs and for keeping decoded data out of persistent state until it
+has been validated. The page is indexed by `calcit docs read/search`.
+
 Install to `~/.config/calcit/modules/`, compile and provide `*.{dylib,so}` file with `./build.sh`.
 
 The native library exports C-safe buffer FFI v1 and requires Calcit 0.13.57 or
