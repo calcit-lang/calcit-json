@@ -16,7 +16,7 @@
                 (:ok value) value
                 (:err message) (raise message)
           :examples $ []
-          :ffi $ {} (:backend :native) (:symbol |json_parse_result)
+          :ffi $ {} (:backend :native) (:invoke :sync) (:kind :dylib-method) (:symbol |json_parse_result) (:transport :edn-buffer-v1)
           :schema $ :: 'Fn
             {} (:return 'Dynamic)
               :args $ [] 'String
@@ -48,7 +48,7 @@
                 (:ok value) value
                 (:err message) (raise message)
           :examples $ []
-          :ffi $ {} (:backend :native) (:symbol |json_stringify_result)
+          :ffi $ {} (:backend :native) (:invoke :sync) (:kind :dylib-method) (:symbol |json_stringify_result) (:transport :edn-buffer-v1)
           :schema $ :: 'Fn
             {} (:return 'String)
               :args $ [] 'Dynamic 'Bool
@@ -120,7 +120,6 @@
           :code $ quote
             defmacro get-dylib-ext () $ case-default (&get-os) |.so (:macos |.dylib) (:windows |.dll)
           :examples $ []
-          :ffi $ {} (:backend :native)
           :schema $ :: 'Macro
             {}
               :capabilities $ #{} :platform-read
