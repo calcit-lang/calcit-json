@@ -1,4 +1,26 @@
-## Calcit JSON
+# Calcit JSON (archived / 已归档)
+
+> [!IMPORTANT]
+> This repository is frozen at `0.0.17` and archived. JSON parsing and encoding
+> are built into Calcit; do not upgrade this native module for new Calcit
+> releases or add new features here.
+>
+> 本仓库冻结于 `0.0.17` 并归档。JSON 解析与编码已内建到 Calcit；后续 Calcit
+> 发版不再升级此 native 模块，也不在此增加功能。
+
+## Migration / 迁移
+
+- `json.core/parse-result text` → `text.parse-json` (returns `Result<Dynamic,String>`);
+- `json.core/parse text` → core `json-parse text` when failure should raise;
+- `json.core/stringify value` → core `json-stringify value`;
+- pretty output → core `json-pretty value`;
+- validate open JSON with `decode-map-as` / `try-decode-map-as` before it enters
+  typed application state.
+
+Existing tags and source remain available for old projects, but consumers should pin
+`0.0.17` while migrating instead of following `main`.
+
+旧项目仍可读取已有 tag 和源码，但应固定 `0.0.17` 并逐步迁移，不再依赖 `main`。
 
 > based on [json](https://docs.rs/json/latest/json/).
 

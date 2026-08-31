@@ -1,5 +1,9 @@
 # 维护指南 / Maintainer guide
 
+> Archived repository / 已归档仓库：禁止例行 Calcit、依赖、Actions 或文档升级。
+> Only restore the repository for an explicitly approved archival correction or
+> critical security notice. New JSON work belongs in `calcit-lang/calcit`.
+
 ## 中文
 
 - 修改 Calcit snapshot 前先运行 calcit docs agents --full，并只通过 calcit edit / calcit tree 修改 calcit.cirru。
