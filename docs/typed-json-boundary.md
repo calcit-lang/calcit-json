@@ -39,3 +39,16 @@ let
 For WebSocket traffic, decode JSON once at ingress, validate the operation/message envelope, and retain revision, acknowledgement, and resynchronization fields as typed data. At egress, serialize only after the updater has produced a valid response or patch message. A parser success means the text is valid JSON; it does not mean the message is current, authorized, or compatible with the active protocol revision.
 
 For persisted data, migrate a copied snapshot first. Parse, validate, reconstruct the typed state, serialize it again, and compare the logical result before atomically replacing the live file.
+
+## Native FFI contract
+
+The raw `parse` and `stringify` definitions publish complete native synchronous
+lowering metadata: their symbols use `edn-buffer-v1` transport and
+`dylib-method` invocation. Run `calcit calcit.cirru ffi export --json` to inspect
+the versioned contract.
+
+Interface IR v1 intentionally does not convert JSON `Dynamic` values into a
+generated signature. The export therefore retains an
+`E_FFI_IR_UNSUPPORTED_TYPE` diagnostic while the C-safe transport and the
+logical JSON validation boundary remain handwritten. This is a typed boundary,
+not an invitation to replace unknown JSON values with unchecked generated data.

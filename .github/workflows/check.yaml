@@ -42,3 +42,17 @@ jobs:
           calcit calcit.cirru --warn-dyn-method --check-only
           calcit calcit.cirru analyze quality --baseline config/calcit-quality.json
           calcit calcit.cirru
+
+      - name: Validate FFI Interface IR lowering
+        run: |
+          calcit calcit.cirru ffi export --json > /tmp/calcit-json-ffi-interface-ir.json
+          jq -e '
+            .data.summary == {"definitions":2,"diagnostics":2,"supported":0,"unsupported":2}
+            and ([.data.interface.definitions[].lowering.symbol] | sort == ["json_parse_result","json_stringify_result"])
+            and all(.data.interface.definitions[];
+              .lowering.backend == "native"
+              and .lowering.invoke == "sync"
+              and .lowering.kind == "dylib-method"
+              and .lowering.transport == "edn-buffer-v1")
+            and all(.diagnostics[]; .code == "E_FFI_IR_UNSUPPORTED_TYPE")
+          ' /tmp/calcit-json-ffi-interface-ir.json
